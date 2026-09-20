@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.34;
 import "./RToken.sol";
+import "forge-std/console.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 
@@ -87,12 +88,10 @@ contract LendingPool {
         require(m.borrowingEnabled, "borrowing is not enabled in this token");
         require(_amount > 0, "amount can not be 0");
         require(m.totalPooled >= _amount, "not enough to borrow");
-
-        require(isHealthy(msg.sender));
-
         m.totalPooled -= _amount;
         m.totalBorrowed += _amount;
         debt[_token][msg.sender] += _amount;
+        require(isHealthy(msg.sender));
 
         IERC20(_token).transfer(msg.sender, _amount);
         emit Borrowed(msg.sender, _token, _amount);

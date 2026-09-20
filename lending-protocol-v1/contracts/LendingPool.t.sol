@@ -42,6 +42,39 @@ contract LendingPoolTest is Test {
         assertEq(rTokenOf(address(usdc)).balanceOf(rishi), 1000e6);
     }
 
+    function test_SupplyZeroReverts() public {
+        // supplyAs(rishi, usdc, 0);
+        vm.startPrank(rishi);
+        vm.expectRevert("amount can not be 0");
+        pool.supply(address(usdc), 0);
+        vm.stopPrank();
+    }
+
+    function test_SupplyUnlistedMarketReverts() public {
+        vm.startPrank(rishi);
+        vm.expectRevert("market is not listed");
+        pool.supply(address(0), 500e6);
+        vm.stopPrank();
+    }
+
+    function test_SupplyWithoutApprovalReverts() public {
+        vm.startPrank(rishi);
+        vm.expectRevert();
+        pool.supply(address(usdc), 500e6);
+        vm.stopPrank();
+    }
+
+    function test_SupplyTooSmallToBuyAShareReverts() public {
+        supplyAs(address(rishi), usdc, 1000e6);
+        earnInterest();
+
+        vm.startPrank(namya);
+        usdc.approve(address(pool), 1);
+        vm.expectRevert("amount too small");
+        pool.supply(address(usdc), 1);
+        vm.stopPrank();
+    }
+
     // helper function which I will need, if someone watching this I just want you to know that these are my written comments...
     function rTokenOf(address tokenName) internal view returns (RToken) {
         (, , RToken rToken, , , , , ) = pool.markets(address(tokenName));
@@ -52,5 +85,20 @@ contract LendingPoolTest is Test {
         vm.startPrank(who);
         _token.approve(address(pool), _amount);
         pool.supply(address(_token), _amount);
+        vm.stopPrank();
+    }
+
+    function earnInterest() internal {
+        supplyAs(somya, weth, 1e18);
+        vm.startPrank(somya);
+        pool.borrow(address(usdc), 500e6);
+        vm.stopPrank();
+
+        usdc.mint(somya, 40e6);
+
+        vm.startPrank(somya);
+        usdc.approve(address(pool), 540e6);
+        pool.repay(address(usdc), 540e6);
+        vm.stopPrank();
     }
 }
