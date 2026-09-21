@@ -2,6 +2,7 @@
 pragma solidity ^0.8.34;
 
 import {Test} from "forge-std/Test.sol";
+import "forge-std/console.sol";
 import {LendingPool} from "./LendingPool.sol";
 import {MockERC20} from "./MockERC20.sol";
 import {RToken} from "./RToken.sol";
@@ -43,7 +44,6 @@ contract LendingPoolTest is Test {
     }
 
     function test_SupplyZeroReverts() public {
-        // supplyAs(rishi, usdc, 0);
         vm.startPrank(rishi);
         vm.expectRevert("amount can not be 0");
         pool.supply(address(usdc), 0);
@@ -73,6 +73,17 @@ contract LendingPoolTest is Test {
         vm.expectRevert("amount too small");
         pool.supply(address(usdc), 1);
         vm.stopPrank();
+    }
+
+    function test_SupplyWhileLoanOutstandingDoesNotMovePrice() public {
+        supplyAs(rishi, usdc, 1000e6);
+        supplyAs(somya, weth, 1e18);
+        vm.prank(somya);
+        pool.borrow(address(usdc), 500e6);
+
+        supplyAs(namya, usdc, 500e6);
+
+        assertEq(rTokenOf(address(usdc)).balanceOf(namya), 500e6);
     }
 
     // helper function which I will need, if someone watching this I just want you to know that these are my written comments...

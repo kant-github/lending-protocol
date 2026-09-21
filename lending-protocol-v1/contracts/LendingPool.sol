@@ -88,10 +88,12 @@ contract LendingPool {
         require(m.borrowingEnabled, "borrowing is not enabled in this token");
         require(_amount > 0, "amount can not be 0");
         require(m.totalPooled >= _amount, "not enough to borrow");
+
         m.totalPooled -= _amount;
         m.totalBorrowed += _amount;
         debt[_token][msg.sender] += _amount;
-        require(isHealthy(msg.sender));
+
+        require(isHealthy(msg.sender), "not enough collateral");
 
         IERC20(_token).transfer(msg.sender, _amount);
         emit Borrowed(msg.sender, _token, _amount);
