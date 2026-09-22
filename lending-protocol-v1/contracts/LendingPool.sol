@@ -189,5 +189,10 @@ contract LendingPool {
             totalPooled: 0,
             totalBorrowed: 0
         });
+        listedTokens.push(_token);
+    }
+
+    function getListedMarkets() external view returns (address[] memory) {
+        return listedTokens;
     }
 }

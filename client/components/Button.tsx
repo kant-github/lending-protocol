@@ -6,16 +6,14 @@ type Size = "sm" | "md";
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: Variant;
     size?: Size;
-    children: ReactNode;
+    children?: ReactNode;
 }
 
-/** the outer shell — this is the base the cap sits on, and it owns the border */
 const base: Record<Variant, string> = {
     default: "border-neutral-300 bg-[#e4e4e7]",
     primary: "border-neutral-950 bg-neutral-950",
 };
 
-/** the inner cap — the face you actually read */
 const cap: Record<Variant, string> = {
     default: "bg-white text-neutral-900 group-hover:bg-neutral-50",
     primary: "bg-neutral-800 text-white group-hover:bg-neutral-700",

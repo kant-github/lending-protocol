@@ -7,7 +7,7 @@ import { WagmiProvider } from "wagmi";
 export default function WagmiProviders({ children }: { children: ReactNode }) {
     const [queryClient] = useState(() => new QueryClient);
     return (
-        <WagmiProvider config={config} reconnectOnMount={false}>
+        <WagmiProvider config={config} reconnectOnMount={true}>
             <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
         </WagmiProvider>
     )

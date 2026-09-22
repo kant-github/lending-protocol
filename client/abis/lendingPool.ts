@@ -202,6 +202,19 @@ export const lendingPoolAbi = [
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "getListedMarkets",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",

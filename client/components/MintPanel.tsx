@@ -50,7 +50,7 @@ export default function MintPanel({
         transition={spring}
         className={`
                     absolute right-0 top-0 z-50 cursor-pointer outline-none
-                    border border-neutral-300 bg-[#e4e4e7] pb-1
+                    border-[1px] border-neutral-300 bg-[#e4e4e7] pb-1
                     focus-visible:ring-2 focus-visible:ring-neutral-900/20
                     ${open ? PANEL_SIZE : "h-full w-full"}
                 `}

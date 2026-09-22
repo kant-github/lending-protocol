@@ -6,7 +6,7 @@ import type { TokenInfo } from "@/lib/contracts";
 
 export default function TokenLogo({
     token,
-    size = 28,
+    size = 32,
 }: {
     token: TokenInfo;
     size?: number;
@@ -30,6 +30,8 @@ export default function TokenLogo({
             alt={token.symbol}
             width={size}
             height={size}
+            unoptimized
+            priority
             onError={() => setFailed(true)}
             className="shrink-0 rounded-full"
         />
